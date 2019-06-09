@@ -56,6 +56,16 @@ $('#resize').simpleReize({
 });
 ```
 
+Store current width and height in the storage:
+
+```javascript
+$('#resize').simpleReize({
+  store: true,
+  storeKey: 'YOUR_KEY',
+  storeType: 'local'  // or 'session'
+});
+```
+
 ### Callbacks
 
 ```javascript

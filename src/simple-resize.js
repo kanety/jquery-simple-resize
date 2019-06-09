@@ -1,13 +1,17 @@
 import $ from 'jquery';
 
 import { NAMESPACE } from './consts';
+import Store from './store';
 
 const DEFAULTS = {
   top: null,
   bottom: null,
   left: null,
   right: null,
-  corner: null
+  corner: null,
+  store: false,
+  storeKey: NAMESPACE,
+  storeType: 'session'
 };
 
 export default class SimpleResize {
@@ -26,6 +30,8 @@ export default class SimpleResize {
     this.startWidth = 0;
     this.startHeight = 0;
 
+    this.store = new Store(this.options);
+
     this.init();
   }
 
@@ -35,6 +41,10 @@ export default class SimpleResize {
     this.build();
     this.unbind();
     this.bind();
+
+    if (this.options.store) {
+      this.load();
+    }
   }
 
   build() {
@@ -109,7 +119,34 @@ export default class SimpleResize {
 
     $('iframe').css('pointer-events', 'auto');
 
+    if (this.options.store) {
+      this.save();
+    }
+
     this.$target.trigger('resize:end', [$handler]);
+  }
+
+  load() {
+    let data = this.store.load();
+    if (!data) return;
+
+    if (data.width) {
+      this.$target.width(data.width);
+    }
+    if (data.height) {
+      this.$target.height(data.height);
+    }
+  }
+
+  save() {
+    let data = {};
+    if (this.handlers.corner || this.handlers.left || this.handlers.right) {
+      data.width = this.$target.width();
+    }
+    if (this.handlers.corner || this.handlers.top || this.handlers.bottom) {
+      data.height = this.$target.height();
+    }
+    this.store.save(data);
   }
 
   static getDefaults() {

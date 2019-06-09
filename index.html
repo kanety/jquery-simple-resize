@@ -3,7 +3,7 @@
   <meta charset="UTF-8">
   <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="dist/jquery-simple-resize.js"></script>
-  <link rel="stylesheet" href="dist/jquery-simple-resize.css"></script>
+  <link rel="stylesheet" href="dist/jquery-simple-resize.css" />
 </head>
 <body>
   <h1>Basic resizer</h1>
@@ -31,7 +31,8 @@
     bottom: true,
     left: true,
     right: true,
-    corner: true
+    corner: true,
+    store: true
   }).on('resize:start', function(e, $handler) {
     $('#message').append('<div>started: ' + $handler.attr('class') + '</div>');
   }).on('resize:end', function(e, $handler) {
