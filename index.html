@@ -35,10 +35,10 @@
     store: true
   }).on('resize:start', function(e, $handler) {
     $('#message').append('<div>started: ' + $handler.attr('class') + '</div>');
+  }).on('resize:move', function(e, $handler) {
+    $('#message').append('<div>moved: ' + $handler.attr('class') + '</div>');
   }).on('resize:end', function(e, $handler) {
     $('#message').append('<div>ended: ' + $handler.attr('class') + '</div>');
-  }).on('resize:move', function(e, $handler, width, height) {
-    $('#message').append('<div>moved: ' + $handler.attr('class') + '</div>');
   });
   </script>
 

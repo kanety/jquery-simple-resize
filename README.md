@@ -69,13 +69,13 @@ $('#resize').simpleReize({
 ### Callbacks
 
 ```javascript
-$('table').simpleResize({
+$('#resize').simpleResize({
   ...
 }).on('resize:start', function(e, $handler) {
   ...
-}).on('resize:end', function(e, $handler) {
-  ...
 }).on('resize:move', function(e, $handler) {
+  ...
+}).on('resize:end', function(e, $handler) {
   ...
 });
 ```
