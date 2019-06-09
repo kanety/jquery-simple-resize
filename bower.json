@@ -1,0 +1,5 @@
+{
+  "name": "@kanety/jquery-simple-resize",
+  "version": "0.1.0",
+  "main": "dist/jquery-simple-resize.js"
+}

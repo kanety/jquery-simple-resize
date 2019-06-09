@@ -1,0 +1,99 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script src="node_modules/jquery/dist/jquery.min.js"></script>
+  <script src="dist/jquery-simple-resize.js"></script>
+  <link rel="stylesheet" href="dist/jquery-simple-resize.css"></script>
+</head>
+<body>
+  <h1>Basic resizer</h1>
+  <style>
+  #basic {
+    width: 50px;
+    min-width: 50px;
+    max-width: 300px;
+    min-height: 50px;
+    max-height: 300px;
+    border: 1px solid #aaa;
+  }
+  #message {
+    height: 200px;
+    overflow-y: scroll;
+  }
+  </style>
+  <div id="basic">
+    <div>text</div>
+  </div>
+  <div id="message"></div>
+  <script>
+  $('#basic').simpleResize({
+    top: true,
+    bottom: true,
+    left: true,
+    right: true,
+    corner: true
+  }).on('resize:start', function(e, $handler) {
+    $('#message').append('<div>started: ' + $handler.attr('class') + '</div>');
+  }).on('resize:end', function(e, $handler) {
+    $('#message').append('<div>ended: ' + $handler.attr('class') + '</div>');
+  }).on('resize:move', function(e, $handler, width, height) {
+    $('#message').append('<div>moved: ' + $handler.attr('class') + '</div>');
+  });
+  </script>
+
+  <h1>Vertical resizer</h1>
+  <style>
+  #vertical {
+    display: flex;
+    width: 100%;
+  }
+  #vertical .box-left {
+    flex: 0 0 auto;
+    min-width: 50px;
+    max-width: calc(100% - 50px);
+    height: 100px;
+    border: 1px solid #ccc;
+  }
+  #vertical .box-right {
+    flex: 1 1 auto;
+    height: 100px;
+    border: 1px solid #ccc;
+  }
+  </style>
+  <div id="vertical">
+    <div id="vertical_box1" class="box-left">text1</div>
+    <div id="vertical_handler"></div>
+    <div id="vertical_box2" class="box-right">text2</div>
+  </div>
+  <script>
+  $('#vertical_box1').simpleResize({
+    right: '#vertical_handler'
+  });
+  </script>
+
+  <h1>Horizontal resizer</h1>
+  <style>
+  #horizontal {
+    height: 300px;
+    border: 1px solid #ccc;
+  }
+  #horizontal .box-top {
+    min-height: 50px;
+    max-height: calc(100% - 50px);
+  }
+  #horizontal .box-bottom {
+    min-height: 50px;
+  }
+  </style>
+  <div id="horizontal">
+    <div id="horizontal_box1" class="box-top">text1</div>
+    <div id="horizontal_handler"></div>
+    <div id="horizontal_box2" class="box-bottom">text2</div>
+  </div>
+  <script>
+  $('#horizontal_box1').simpleResize({
+    bottom: '#horizontal_handler'
+  });
+  </script>
+</body>
+</html>
