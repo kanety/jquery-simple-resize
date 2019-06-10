@@ -1,8 +1,8 @@
 .simple-resize {
-  position: relative;
+  &.resize-inner {
+    position: relative;
 
-  .resize-inner {
-    &.resize-top {
+    .resize-top {
       position: absolute;
       top: -3px;
       left: 0;
@@ -10,7 +10,7 @@
       height: 6px;
       cursor: s-resize;
     }
-    &.resize-bottom {
+    .resize-bottom {
       position: absolute;
       left: 0;
       bottom: -3px;
@@ -18,7 +18,7 @@
       height: 6px;
       cursor: s-resize;
     }
-    &.resize-left {
+    .resize-left {
       position: absolute;
       top: 0;
       left: -3px;
@@ -26,7 +26,7 @@
       height: 100%;
       cursor: e-resize;
     }
-    &.resize-right {
+    .resize-right {
       position: absolute;
       top: 0;
       right: -3px;
@@ -34,7 +34,7 @@
       height: 100%;
       cursor: e-resize;
     }
-    &.resize-corner {
+    .resize-corner {
       position: absolute;
       right: -6px;
       bottom: 1px;

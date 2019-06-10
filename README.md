@@ -46,13 +46,16 @@ $('#resize').simpleReize({
 
 Specify selector out of the resizable element:
 
+```html
+<div id="resize">
+  <div>text</div>
+</div>
+<div id="resize_bottom"></div>
+```
+
 ```javascript
 $('#resize').simpleReize({
-  top: '#resize_top',
-  bottom: '#resize_bottom',
-  left: '#resize_left',
-  right: '#resize_right',
-  corner: '#resize_corner'
+  bottom: '#resize_bottom'
 });
 ```
 

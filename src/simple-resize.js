@@ -51,11 +51,12 @@ export default class SimpleResize {
     ['top', 'bottom', 'left', 'right', 'corner'].forEach((type) => {
       let $handler = null;
       if (this.options[type] == true) {
-        $handler = $('<div>').addClass('resize-inner').appendTo(this.$target);
+        this.$target.addClass('resize-inner');
+        $handler = $('<div>').appendTo(this.$target);
       } else if (this.options[type]) {
         $handler = $(this.options[type]);
         if ($.contains(this.$target[0], $handler[0])) {
-          $handler.addClass('resize-inner');
+          this.$target.addClass('resize-inner');
         } else {
           $handler.addClass(NAMESPACE).addClass('resize-outer');
         }
