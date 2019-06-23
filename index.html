@@ -32,7 +32,8 @@
     left: true,
     right: true,
     corner: true,
-    store: true
+    store: 'session',
+    storeKey: 'simple-resize-basic'
   }).on('resize:start', function(e, $handler) {
     $('#message').append('<div>started: ' + $handler.attr('class') + '</div>');
   }).on('resize:move', function(e, $handler) {
