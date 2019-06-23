@@ -33,6 +33,7 @@ export default class SimpleResize {
     }
 
     this.init();
+    this.load();
   }
 
   init() {
@@ -41,10 +42,22 @@ export default class SimpleResize {
     this.build();
     this.unbind();
     this.bind();
+  }
 
-    if (this.options.store) {
-      this.load();
-    }
+  destroy() {
+    this.$target.removeClass(NAMESPACE).removeClass('resize-target');
+
+    ['top', 'bottom', 'left', 'right', 'corner'].forEach((type) => {
+      let $handler = this.handlers[type];
+      if ($handler) {
+        $handler.addClass(NAMESPACE).removeClass(`resize-inner resize-outer resize-${type}`);
+        if (this.options[type] == true) {
+          $handler.remove();
+        }
+      }
+    });
+
+    this.unbind();
   }
 
   build() {
@@ -75,6 +88,7 @@ export default class SimpleResize {
   }
 
   unbind() {
+    this.$target.off('resize:start resize:move resize:end')
     for (let type in this.handlers) {
       this.handlers[type].off(`.${this.namespace}`);
     }
@@ -121,9 +135,7 @@ export default class SimpleResize {
 
     $('iframe').css('pointer-events', 'auto');
 
-    if (this.options.store) {
-      this.save();
-    }
+    this.save();
 
     this.$target.trigger('resize:end', [$handler]);
   }

@@ -10,19 +10,17 @@ describe('jquery-simple-resize', () => {
     $elem.trigger($.Event('mouseup'));
   }
 
-  describe('basic resizer', () => {
+  describe('basic', () => {
     let $box, width, height;
     let handlers = {};
-    let $message;
 
     beforeEach(() => {
       $box = $('#basic');
       width = $box.width();
       height = $box.height();
-      ['top', 'bottom', 'left', 'right', 'corner'].forEach(function(type) {
+      ['top', 'bottom', 'left', 'right', 'corner'].forEach((type) => {
         handlers[type] = $box.find('.resize-' + type);
       });
-      $message = $('#message');
     });
 
     it('resizes by top drag', () => {
@@ -53,6 +51,20 @@ describe('jquery-simple-resize', () => {
       drag(handlers.corner);
       expect($box.width()).toEqual(width + 10);
       expect($box.height()).toEqual(height + 10);
+    });
+  });
+
+  describe('callbacks', () => {
+    let $box;
+    let handlers = {};
+    let $message;
+
+    beforeEach(() => {
+      $box = $('#callbacks');
+      ['top', 'bottom', 'left', 'right', 'corner'].forEach((type) => {
+        handlers[type] = $box.find(`.resize-${type}`);
+      });
+      $message = $('#message');
     });
 
     it('runs callbacks', () => {

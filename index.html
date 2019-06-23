@@ -16,15 +16,10 @@
     max-height: 300px;
     border: 1px solid #aaa;
   }
-  #message {
-    height: 200px;
-    overflow-y: scroll;
-  }
   </style>
   <div id="basic">
     <div>text</div>
   </div>
-  <div id="message"></div>
   <script>
   $('#basic').simpleResize({
     top: true,
@@ -34,13 +29,36 @@
     corner: true,
     store: 'session',
     storeKey: 'simple-resize-basic'
-  }).on('resize:start', function(e, $handler) {
-    $('#message').append('<div>started: ' + $handler.attr('class') + '</div>');
-  }).on('resize:move', function(e, $handler) {
-    $('#message').append('<div>moved: ' + $handler.attr('class') + '</div>');
-  }).on('resize:end', function(e, $handler) {
-    $('#message').append('<div>ended: ' + $handler.attr('class') + '</div>');
   });
+  </script>
+
+  <h1>Callbacks</h1>
+  <style>
+  #callbacks {
+    width: 50px;
+    border: 1px solid #aaa;
+  }
+  #message {
+    height: 200px;
+    overflow-y: scroll;
+  }
+  </style>
+  <div id="callbacks">
+    <div>text</div>
+  </div>
+  <div id="message"></div>
+  <script>
+  for (var i=0; i<2; i++) {
+    $('#callbacks').simpleResize({
+      corner: true,
+    }).on('resize:start', function(e, $handler) {
+      $('#message').prepend('<div>started: ' + $handler.attr('class') + '</div>');
+    }).on('resize:move', function(e, $handler) {
+      $('#message').prepend('<div>moved: ' + $handler.attr('class') + '</div>');
+    }).on('resize:end', function(e, $handler) {
+      $('#message').prepend('<div>ended: ' + $handler.attr('class') + '</div>');
+    });
+  }
   </script>
 
   <h1>Vertical resizer</h1>
