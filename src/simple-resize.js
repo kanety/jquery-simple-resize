@@ -156,6 +156,6 @@ export default class SimpleResize {
   }
 
   static setDefaults(options) {
-    $.extend(DEFAULTS, options);
+    return $.extend(DEFAULTS, options);
   }
 }

@@ -1,5 +1,5 @@
-describe('jquery-simple-resize', function() {
-  beforeEach(function() {
+describe('jquery-simple-resize', () => {
+  beforeEach(() => {
     document.body.innerHTML = __html__['index.html'];
     eval($('script').text());
   });
@@ -10,12 +10,12 @@ describe('jquery-simple-resize', function() {
     $elem.trigger($.Event('mouseup'));
   }
 
-  describe('basic resizer', function() {
-    var $box, width, height;
-    var handlers = {};
-    var $message;
+  describe('basic resizer', () => {
+    let $box, width, height;
+    let handlers = {};
+    let $message;
 
-    beforeEach(function() {
+    beforeEach(() => {
       $box = $('#basic');
       width = $box.width();
       height = $box.height();
@@ -25,37 +25,37 @@ describe('jquery-simple-resize', function() {
       $message = $('#message');
     });
 
-    it('resizes by top drag', function() {
+    it('resizes by top drag', () => {
       drag(handlers.top);
       expect($box.width()).toEqual(width);
       expect($box.height()).toEqual(height + 10);
     });
 
-    it('resizes by bottom drag', function() {
+    it('resizes by bottom drag', () => {
       drag(handlers.bottom);
       expect($box.width()).toEqual(width);
       expect($box.height()).toEqual(height + 10);
     });
 
-    it('resizes by left drag', function() {
+    it('resizes by left drag', () => {
       drag(handlers.left);
       expect($box.width()).toEqual(width + 10);
       expect($box.height()).toEqual(height);
     });
 
-    it('resizes by right drag', function() {
+    it('resizes by right drag', () => {
       drag(handlers.right);
       expect($box.width()).toEqual(width + 10);
       expect($box.height()).toEqual(height);
     });
 
-    it('resizes by corner drag', function() {
+    it('resizes by corner drag', () => {
       drag(handlers.corner);
       expect($box.width()).toEqual(width + 10);
       expect($box.height()).toEqual(height + 10);
     });
 
-    it('runs callbacks', function() {
+    it('runs callbacks', () => {
       drag(handlers.corner);
       expect($message.text()).toContain('started');
       expect($message.text()).toContain('moved');
@@ -63,36 +63,36 @@ describe('jquery-simple-resize', function() {
     });
   });
 
-  describe('vertical resizer', function() {
-    var $box, width, height;
-    var $handler;
+  describe('vertical resizer', () => {
+    let $box, width, height;
+    let $handler;
 
-    beforeEach(function() {
+    beforeEach(() => {
       $box = $('#vertical_box1');
       width = $box.width();
       height = $box.height();
       $handler = $('#vertical_handler');
     });
 
-    it('resizes by drag', function() {
+    it('resizes by drag', () => {
       drag($handler);
       expect($box.width()).toEqual(width + 10);
       expect($box.height()).toEqual(height);
     });
   });
 
-  describe('horizontal resizer', function() {
-    var $box, width, height;
-    var $handler;
+  describe('horizontal resizer', () => {
+    let $box, width, height;
+    let $handler;
 
-    beforeEach(function() {
+    beforeEach(() => {
       $box = $('#horizontal_box1');
       width = $box.width();
       height = $box.height();
       $handler = $('#horizontal_handler');
     });
 
-    it('resizes by drag', function() {
+    it('resizes by drag', () => {
       drag($handler);
       expect($box.width()).toEqual(width);
       expect($box.height()).toEqual(height + 10);
