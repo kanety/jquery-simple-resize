@@ -1,7 +1,7 @@
 {
   "name": "@kanety/jquery-simple-resize",
   "description": "A jquery plugin for simple resizable element",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": "Yoshikazu Kaneta <kaneta@sitebridge.co.jp>",
   "repository": {
     "type": "git",
