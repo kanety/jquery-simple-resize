@@ -1,7 +1,7 @@
 import $ from 'jquery';
+import Store from '@kanety/js-store';
 
 import { NAMESPACE } from './consts';
-import Store from './store';
 
 const DEFAULTS = {
   top: null,
@@ -9,9 +9,8 @@ const DEFAULTS = {
   left: null,
   right: null,
   corner: null,
-  store: false,
-  storeKey: NAMESPACE,
-  storeType: 'session'
+  store: null,
+  storeKey: null
 };
 
 export default class SimpleResize {
@@ -25,14 +24,16 @@ export default class SimpleResize {
     this.namespace = `${NAMESPACE}-${this.uid}`;
 
     this.handlers = {};
-    this.startX = 0;
-    this.startY = 0;
-    this.startWidth = 0;
-    this.startHeight = 0;
 
-    this.store = new Store(this.options);
+    if (this.options.store && this.options.storeKey) {
+      this.store = new Store({
+        type: this.options.store,
+        key: this.options.storeKey
+      });
+    }
 
     this.init();
+    this.load();
   }
 
   init() {
@@ -41,10 +42,22 @@ export default class SimpleResize {
     this.build();
     this.unbind();
     this.bind();
+  }
 
-    if (this.options.store) {
-      this.load();
-    }
+  destroy() {
+    this.$target.removeClass(NAMESPACE).removeClass('resize-target');
+
+    ['top', 'bottom', 'left', 'right', 'corner'].forEach((type) => {
+      let $handler = this.handlers[type];
+      if ($handler) {
+        $handler.addClass(NAMESPACE).removeClass(`resize-inner resize-outer resize-${type}`);
+        if (this.options[type] == true) {
+          $handler.remove();
+        }
+      }
+    });
+
+    this.unbind();
   }
 
   build() {
@@ -76,6 +89,7 @@ export default class SimpleResize {
   }
 
   unbind() {
+    this.$target.off('resize:start resize:move resize:end')
     for (let type in this.handlers) {
       this.handlers[type].off(`.${this.namespace}`);
     }
@@ -122,15 +136,15 @@ export default class SimpleResize {
 
     $('iframe').css('pointer-events', 'auto');
 
-    if (this.options.store) {
-      this.save();
-    }
+    this.save();
 
     this.$target.trigger('resize:end', [$handler]);
   }
 
   load() {
-    let data = this.store.load();
+    if (!this.store) return;
+
+    let data = this.store.get();
     if (!data) return;
 
     if (data.width) {
@@ -142,6 +156,8 @@ export default class SimpleResize {
   }
 
   save() {
+    if (!this.store) return;
+
     let data = {};
     if (this.handlers.corner || this.handlers.left || this.handlers.right) {
       data.width = this.$target.width();
@@ -149,7 +165,7 @@ export default class SimpleResize {
     if (this.handlers.corner || this.handlers.top || this.handlers.bottom) {
       data.height = this.$target.height();
     }
-    this.store.save(data);
+    this.store.set(data);
   }
 
   static getDefaults() {
@@ -157,6 +173,6 @@ export default class SimpleResize {
   }
 
   static setDefaults(options) {
-    $.extend(DEFAULTS, options);
+    return $.extend(DEFAULTS, options);
   }
 }

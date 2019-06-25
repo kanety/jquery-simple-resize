@@ -7,9 +7,8 @@ import { NAMESPACE } from './consts';
 $.fn.simpleResize = function(options) {
   return this.each((i, elem) => {
     let $elem = $(elem);
-    if (!$elem.data(NAMESPACE)) {
-      $elem.data(NAMESPACE, new SimpleResize($elem, options));
-    }
+    if ($elem.data(NAMESPACE)) $elem.data(NAMESPACE).destroy();
+    $elem.data(NAMESPACE, new SimpleResize($elem, options));
   });
 };
 
