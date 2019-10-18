@@ -25,6 +25,8 @@ export default class SimpleResize {
 
     this.handlers = {};
 
+    this.touchMoveListener = this.touchMove.bind(this);
+
     if (this.options.store && this.options.storeKey) {
       this.store = new Store({
         type: this.options.store,
@@ -84,6 +86,9 @@ export default class SimpleResize {
     for (let type in this.handlers) {
       this.handlers[type].on(`mousedown.${this.namespace}`, (e) => {
         this.start($(e.currentTarget), e.pageX, e.pageY);
+      }).on(`touchstart.${this.namespace}`, (e) => {
+        let t = e.originalEvent.changedTouches[0];
+        this.start($(e.currentTarget), t.pageX, t.pageY);
       });
     }
   }
@@ -97,48 +102,60 @@ export default class SimpleResize {
   }
 
   start($handler, x, y) {
+    this.$handler = $handler;
     this.startX = x;
     this.startY = y;
     this.startWidth = this.$target.width();
     this.startHeight = this.$target.height();
 
     this.$document.on(`mousemove.${this.namespace}`, (e) => {
-      this.move($handler, e.pageX, e.pageY);
+      this.move(e.pageX, e.pageY);
     }).on(`mouseup.${this.namespace}`, (e) => {
-      this.end($handler);
+      this.end();
+    }).on(`touchend.${this.namespace}`, (e) => {
+      this.end();
     }).on(`selectstart.${this.namespace}`, (e) => {
       return false;
     });
+
+    document.addEventListener('touchmove', this.touchMoveListener, { passive: false });
 
     $('iframe').css('pointer-events', 'none');
 
     this.$target.trigger('resize:start', [$handler]);
   }
 
-  move($handler, x, y) {
+  move(x, y) {
     let dx = x - this.startX;
     let dy = y - this.startY;
     let width = this.startWidth + dx;
     let height = this.startHeight + dy;
 
-    if (['resize-corner', 'resize-right', 'resize-left'].some((key) => $handler.hasClass(key))) {
+    if (['resize-corner', 'resize-right', 'resize-left'].some((key) => this.$handler.hasClass(key))) {
       this.$target.width(width);
     }
-    if (['resize-corner', 'resize-top', 'resize-bottom'].some((key) => $handler.hasClass(key))) {
+    if (['resize-corner', 'resize-top', 'resize-bottom'].some((key) => this.$handler.hasClass(key))) {
       this.$target.height(height);
     }
 
-    this.$target.trigger('resize:move', [$handler]);
+    this.$target.trigger('resize:move', [this.$handler]);
   }
 
-  end($handler) {
+  end() {
     this.$document.off(`.${this.namespace}`);
+
+    document.removeEventListener('touchmove', this.touchMoveListener);
 
     $('iframe').css('pointer-events', 'auto');
 
     this.save();
 
-    this.$target.trigger('resize:end', [$handler]);
+    this.$target.trigger('resize:end', [this.$handler]);
+  }
+
+  touchMove(e) {
+    this.move(e.changedTouches[0].pageX, e.changedTouches[0].pageY);
+    e.preventDefault();
   }
 
   load() {
