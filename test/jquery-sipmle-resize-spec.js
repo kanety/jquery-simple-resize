@@ -11,64 +11,84 @@ describe('jquery-simple-resize', () => {
   }
 
   describe('basic', () => {
-    let $box, width, height;
-    let handlers = {};
+    let $box;
 
     beforeEach(() => {
       $box = $('#basic');
-      width = $box.width();
-      height = $box.height();
-      ['top', 'bottom', 'left', 'right', 'corner'].forEach((type) => {
-        handlers[type] = $box.find('.resize-' + type);
-      });
+      $box.width(100);
+      $box.height(100);
     });
 
     it('resizes by top drag', () => {
-      drag(handlers.top);
-      expect($box.width()).toEqual(width);
-      expect($box.height()).toEqual(height + 10);
+      let $handler = $box.find('.simple-resize-top');
+      drag($handler);
+      expect($box.width()).toEqual(100);
+      expect($box.height()).toEqual(90);
     });
 
     it('resizes by bottom drag', () => {
-      drag(handlers.bottom);
-      expect($box.width()).toEqual(width);
-      expect($box.height()).toEqual(height + 10);
+      let $handler = $box.find('.simple-resize-bottom');
+      drag($handler);
+      expect($box.width()).toEqual(100);
+      expect($box.height()).toEqual(110);
     });
 
     it('resizes by left drag', () => {
-      drag(handlers.left);
-      expect($box.width()).toEqual(width + 10);
-      expect($box.height()).toEqual(height);
+      let $handler = $box.find('.simple-resize-left');
+      drag($handler);
+      expect($box.width()).toEqual(90);
+      expect($box.height()).toEqual(100);
     });
 
     it('resizes by right drag', () => {
-      drag(handlers.right);
-      expect($box.width()).toEqual(width + 10);
-      expect($box.height()).toEqual(height);
+      let $handler = $box.find('.simple-resize-right');
+      drag($handler);
+      expect($box.width()).toEqual(110);
+      expect($box.height()).toEqual(100);
     });
 
-    it('resizes by corner drag', () => {
-      drag(handlers.corner);
-      expect($box.width()).toEqual(width + 10);
-      expect($box.height()).toEqual(height + 10);
+    it('resizes by top-left drag', () => {
+      let $handler = $box.find('.simple-resize-top-left');
+      drag($handler);
+      expect($box.width()).toEqual(90);
+      expect($box.height()).toEqual(90);
+    });
+
+    it('resizes by top-right drag', () => {
+      let $handler = $box.find('.simple-resize-top-right');
+      drag($handler);
+      expect($box.width()).toEqual(110);
+      expect($box.height()).toEqual(90);
+    });
+
+    it('resizes by bottom-left drag', () => {
+      let $handler = $box.find('.simple-resize-bottom-left');
+      drag($handler);
+      expect($box.width()).toEqual(90);
+      expect($box.height()).toEqual(110);
+    });
+
+    it('resizes by bottom-right drag', () => {
+      let $handler = $box.find('.simple-resize-bottom-right');
+      drag($handler);
+      expect($box.width()).toEqual(110);
+      expect($box.height()).toEqual(110);
     });
   });
 
   describe('callbacks', () => {
     let $box;
-    let handlers = {};
+    let $handler;
     let $message;
 
     beforeEach(() => {
       $box = $('#callbacks');
-      ['top', 'bottom', 'left', 'right', 'corner'].forEach((type) => {
-        handlers[type] = $box.find(`.resize-${type}`);
-      });
+      $handler = $box.find('.simple-resize-bottom-right');
       $message = $('#message');
     });
 
     it('runs callbacks', () => {
-      drag(handlers.corner);
+      drag($handler);
       expect($message.text()).toContain('started');
       expect($message.text()).toContain('moved');
       expect($message.text()).toContain('ended');
@@ -76,38 +96,38 @@ describe('jquery-simple-resize', () => {
   });
 
   describe('vertical resizer', () => {
-    let $box, width, height;
+    let $box;
     let $handler;
 
     beforeEach(() => {
       $box = $('#vertical_box1');
-      width = $box.width();
-      height = $box.height();
+      $box.width(100);
+      $box.height(100);
       $handler = $('#vertical_handler');
     });
 
     it('resizes by drag', () => {
       drag($handler);
-      expect($box.width()).toEqual(width + 10);
-      expect($box.height()).toEqual(height);
+      expect($box.width()).toEqual(110);
+      expect($box.height()).toEqual(100);
     });
   });
 
   describe('horizontal resizer', () => {
-    let $box, width, height;
+    let $box;
     let $handler;
 
     beforeEach(() => {
       $box = $('#horizontal_box1');
-      width = $box.width();
-      height = $box.height();
+      $box.width(100);
+      $box.height(100);
       $handler = $('#horizontal_handler');
     });
 
     it('resizes by drag', () => {
       drag($handler);
-      expect($box.width()).toEqual(width);
-      expect($box.height()).toEqual(height + 10);
+      expect($box.width()).toEqual(100);
+      expect($box.height()).toEqual(110);
     });
   });
 });

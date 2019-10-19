@@ -1,68 +1,86 @@
 .simple-resize {
-  &.resize-inner {
-    position: relative;
+  position: relative;
 
-    .resize-top {
-      position: absolute;
-      top: -3px;
-      left: 0;
-      width: 100%;
-      height: 6px;
-      cursor: s-resize;
-    }
-    .resize-bottom {
-      position: absolute;
-      left: 0;
-      bottom: -3px;
-      width: 100%;
-      height: 6px;
-      cursor: s-resize;
-    }
-    .resize-left {
-      position: absolute;
-      top: 0;
-      left: -3px;
-      width: 6px;
-      height: 100%;
-      cursor: e-resize;
-    }
-    .resize-right {
-      position: absolute;
-      top: 0;
-      right: -3px;
-      width: 6px;
-      height: 100%;
-      cursor: e-resize;
-    }
-    .resize-corner {
-      position: absolute;
-      right: -6px;
-      bottom: 1px;
-      width: 1em;
-      height: 1em;
-      text-align: center;
-      color: #ddd;
-      cursor: nw-resize;
-      transform: rotate(45deg);
-      &:after {
-        content: '\2877';
-      }
+  &-top,
+  &-bottom {
+    position: absolute;
+    width: 100%;
+    height: 6px;
+    cursor: s-resize;
+  }
+  &-top {
+    top: -3px;
+    left: 0;
+  }
+  &-bottom {
+    left: 0;
+    bottom: -3px;
+  }
+  &-left,
+  &-right {
+    position: absolute;
+    width: 6px;
+    height: 100%;
+    cursor: e-resize;
+  }
+  &-left {
+    top: 0;
+    left: -3px;
+  }
+  &-right {
+    top: 0;
+    right: -3px;
+  }
+  &-top-left,
+  &-top-right,
+  &-bottom-left,
+  &-bottom-right {
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    color: #ddd;
+    text-align: center;
+    &:after {
+      content: '⡷';
     }
   }
+  &-top-left {
+    left: -.36em;
+    top: .08em;
+    transform: rotate(225deg);
+    cursor: se-resize;
+  }
+  &-top-right {
+    right: .08em;
+    top: -.36em;
+    transform: rotate(-45deg);
+    cursor: sw-resize;
+  }
+  &-bottom-left {
+    left: .08em;
+    bottom: -.36em;
+    transform: rotate(135deg);
+    cursor: ne-resize;
+  }
+  &-bottom-right {
+    right: -.36em;
+    bottom: .08em;
+    transform: rotate(45deg);
+    cursor: nw-resize;
+  }
 
-  &.resize-outer {
+  &-outer-top,
+  &-outer-bottom {
     border: 1px solid #ccc;
     background-color: #d3d3d3;
-
-    &.resize-top,
-    &.resize-bottom {
-      height: 3px;
-      cursor: s-resize;
-    }
-    &.resize-left,
-    &.resize-right {
-      width: 3px;
-      cursor: e-resize;
-    }
+    height: 3px;
+    cursor: s-resize;
+  }
+  &-outer-left,
+  &-outer-right {
+    border: 1px solid #ccc;
+    background-color: #d3d3d3;
+    width: 3px;
+    cursor: e-resize;
   }
 }

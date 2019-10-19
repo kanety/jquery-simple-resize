@@ -26,7 +26,7 @@ Then run:
 
 ```javascript
 $('#resize').simpleReize({
-  corner: true
+  bottomRight: true
 });
 ```
 
@@ -40,7 +40,10 @@ $('#resize').simpleReize({
   bottom: true,
   left: true,
   right: true,
-  corner: true
+  topLeft: true
+  topRight: true
+  bottomLeft: true
+  bottomRight: true
 });
 ```
 

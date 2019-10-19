@@ -8,22 +8,31 @@ const DEFAULTS = {
   bottom: null,
   left: null,
   right: null,
+  topLeft: null,
+  topRight: null,
+  bottomLeft: null,
+  bottomRight: null,
   corner: null,
   store: null,
   storeKey: null
 };
 
+const TYPES = ['top', 'bottom', 'left', 'right', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
+
 export default class SimpleResize {
   constructor(element, options = {}) {
     this.options = $.extend({}, DEFAULTS, options);
 
+    if (this.options.corner) {
+      this.options.bottomRight = this.options.corner;
+    }
+
     this.$target = $(element);
     this.$document = $(document);
+    this.$handlers = $();
 
     this.uid = new Date().getTime() + Math.random();
     this.namespace = `${NAMESPACE}-${this.uid}`;
-
-    this.handlers = {};
 
     this.touchMoveListener = this.touchMove.bind(this);
 
@@ -39,7 +48,7 @@ export default class SimpleResize {
   }
 
   init() {
-    this.$target.addClass(NAMESPACE).addClass('resize-target');
+    this.$target.addClass(NAMESPACE);
 
     this.build();
     this.unbind();
@@ -47,57 +56,64 @@ export default class SimpleResize {
   }
 
   destroy() {
-    this.$target.removeClass(NAMESPACE).removeClass('resize-target');
+    this.$target.removeClass(NAMESPACE);
 
-    ['top', 'bottom', 'left', 'right', 'corner'].forEach((type) => {
-      let $handler = this.handlers[type];
-      if ($handler) {
-        $handler.addClass(NAMESPACE).removeClass(`resize-inner resize-outer resize-${type}`);
-        if (this.options[type] == true) {
-          $handler.remove();
-        }
-      }
+    TYPES.forEach((type) => {
+      this.$handlers.removeClass(`${NAMESPACE}-${type} ${NAMESPACE}-outer-${type}`);
+    });
+
+    this.$handlers.each((i, handler) => {
+      let $handler = $(handler);
+      let type = $handler.data(`${NAMESPACE}-type`);
+      if (this.options[type] == true) $handler.remove();
     });
 
     this.unbind();
   }
 
   build() {
-    ['top', 'bottom', 'left', 'right', 'corner'].forEach((type) => {
-      let $handler = null;
-      if (this.options[type] == true) {
-        this.$target.addClass('resize-inner');
-        $handler = $('<div>').appendTo(this.$target);
-      } else if (this.options[type]) {
-        $handler = $(this.options[type]);
-        if ($.contains(this.$target[0], $handler[0])) {
-          this.$target.addClass('resize-inner');
-        } else {
-          $handler.addClass(NAMESPACE).addClass('resize-outer');
-        }
-      }
+    this.$handlers = $();
+
+    TYPES.forEach((type) => {
+      let $handler = this.buildHandler(type);
       if ($handler) {
-        this.handlers[type] = $handler.addClass(`resize-${type}`);
+        $handler.data(`${NAMESPACE}-type`, type);
+        this.$handlers = this.$handlers.add($handler);
       }
     });
   }
 
-  bind() {
-    for (let type in this.handlers) {
-      this.handlers[type].on(`mousedown.${this.namespace}`, (e) => {
-        this.start($(e.currentTarget), e.pageX, e.pageY);
-      }).on(`touchstart.${this.namespace}`, (e) => {
-        let t = e.originalEvent.changedTouches[0];
-        this.start($(e.currentTarget), t.pageX, t.pageY);
-      });
+  buildHandler(type) {
+    let $handler = null;
+    let option = this.options[SimpleResize.camelize(type)];
+
+    if (option == true) {
+      $handler = $('<div>').appendTo(this.$target);
+      $handler.addClass(`${NAMESPACE}-${type}`)
+    } else if (option) {
+      $handler = $(option);
+      if ($.contains(this.$target[0], $handler[0])) {
+        $handler.addClass(`${NAMESPACE}-${type}`)
+      } else {
+        $handler.addClass(`${NAMESPACE}-outer-${type}`);
+      }
     }
+
+    return $handler;
+  }
+
+  bind() {
+    this.$handlers.on(`mousedown.${this.namespace}`, (e) => {
+      this.start($(e.currentTarget), e.pageX, e.pageY);
+    }).on(`touchstart.${this.namespace}`, (e) => {
+      let t = e.originalEvent.changedTouches[0];
+      this.start($(e.currentTarget), t.pageX, t.pageY);
+    });
   }
 
   unbind() {
     this.$target.off('resize:start resize:move resize:end')
-    for (let type in this.handlers) {
-      this.handlers[type].off(`.${this.namespace}`);
-    }
+    this.$handlers.off(`.${this.namespace}`);
     this.$document.off(`.${this.namespace}`);
   }
 
@@ -126,15 +142,20 @@ export default class SimpleResize {
   }
 
   move(x, y) {
+    let type = this.$handler.data(`${NAMESPACE}-type`);
     let dx = x - this.startX;
     let dy = y - this.startY;
+
+    if (type.indexOf('left') != -1) dx *= -1;
+    if (type.indexOf('top') != -1) dy *= -1;
+
     let width = this.startWidth + dx;
     let height = this.startHeight + dy;
 
-    if (['resize-corner', 'resize-right', 'resize-left'].some((key) => this.$handler.hasClass(key))) {
+    if (type.indexOf('left') != -1 || type.indexOf('right') != -1) {
       this.$target.width(width);
     }
-    if (['resize-corner', 'resize-top', 'resize-bottom'].some((key) => this.$handler.hasClass(key))) {
+    if (type.indexOf('top') != -1 || type.indexOf('bottom') != -1) {
       this.$target.height(height);
     }
 
@@ -176,13 +197,18 @@ export default class SimpleResize {
     if (!this.store) return;
 
     let data = {};
-    if (this.handlers.corner || this.handlers.left || this.handlers.right) {
+    let types = this.$handlers.map((i, handler) => $(handler).data(`${NAMESPACE}-type`)).get();
+    if (types.some((type) => type.indexOf('left') != -1 || type.indexOf('right') != -1)) {
       data.width = this.$target.width();
     }
-    if (this.handlers.corner || this.handlers.top || this.handlers.bottom) {
+    if (types.some((type) => type.indexOf('top') != -1 || type.indexOf('bottom') != -1)) {
       data.height = this.$target.height();
     }
     this.store.set(data);
+  }
+
+  static camelize(str) {
+    return str.replace(/-([a-z])/g, (m) => m[1].toUpperCase())
   }
 
   static getDefaults() {

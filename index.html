@@ -26,7 +26,10 @@
     bottom: true,
     left: true,
     right: true,
-    corner: true,
+    topLeft: true,
+    topRight: true,
+    bottomLeft: true,
+    bottomRight: true,
     store: 'session',
     storeKey: 'simple-resize-basic'
   });
@@ -52,11 +55,11 @@
     $('#callbacks').simpleResize({
       corner: true,
     }).on('resize:start', function(e, $handler) {
-      $('#message').prepend('<div>started: ' + $handler.attr('class') + '</div>');
+      $('#message').prepend('<div>started: ' + $handler.data('simple-resize-type') + '</div>');
     }).on('resize:move', function(e, $handler) {
-      $('#message').prepend('<div>moved: ' + $handler.attr('class') + '</div>');
+      $('#message').prepend('<div>moved: ' + $handler.data('simple-resize-type') + '</div>');
     }).on('resize:end', function(e, $handler) {
-      $('#message').prepend('<div>ended: ' + $handler.attr('class') + '</div>');
+      $('#message').prepend('<div>ended: ' + $handler.data('simple-resize-type') + '</div>');
     });
   }
   </script>
