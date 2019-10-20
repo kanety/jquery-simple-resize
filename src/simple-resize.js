@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import Store from '@kanety/js-store';
 
+import './simple-resize.scss';
 import { NAMESPACE } from './consts';
 
 const DEFAULTS = {

@@ -1,6 +1,5 @@
 import $ from 'jquery';
 
-import './jquery-simple-resize.scss';
 import SimpleResize from './simple-resize';
 import { NAMESPACE } from './consts';
 
